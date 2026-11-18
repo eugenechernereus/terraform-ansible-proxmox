@@ -228,14 +228,14 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[Provider: Proxmox]
-    B[Data: Proxmox Template]
-    C[Module: VM]
-    D[for_each: var.vms]
-    E[VM: web-01]
-    F[VM: app-01]
-    G[VM: db-01]
-    H[Outputs]
+    A["Provider: Proxmox"]
+    B["Data: Proxmox Template"]
+    C["Module: VM"]
+    D["for_each: var.vms"]
+    E["VM: web-01"]
+    F["VM: app-01"]
+    G["VM: db-01"]
+    H["Outputs"]
 
     A --> B
     B --> C
