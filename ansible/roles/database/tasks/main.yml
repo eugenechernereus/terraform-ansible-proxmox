@@ -1,0 +1,13 @@
+---
+- name: Install PostgreSQL
+  ansible.builtin.apt:
+    name: "{{ database_package }}"
+    state: present
+    update_cache: true
+
+- name: Ensure PostgreSQL is enabled and running
+  ansible.builtin.service:
+    name: "{{ database_service }}"
+    state: started
+    enabled: true
+

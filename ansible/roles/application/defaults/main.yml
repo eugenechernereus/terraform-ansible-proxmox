@@ -1,0 +1,13 @@
+---
+app_user: demo-app
+app_group: demo-app
+
+app_directory: /opt/app
+app_script: server.py
+
+app_port: 3000
+app_bind_address: "0.0.0.0"
+
+app_service: demo-app
+app_python: /usr/bin/python3
+

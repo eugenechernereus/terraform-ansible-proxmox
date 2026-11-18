@@ -1,0 +1,69 @@
+---
+- name: Check database server
+  hosts: db
+  become: true
+  tasks:
+    - name: Check PostgreSQL service
+      ansible.builtin.command: systemctl is-active postgresql
+      changed_when: false
+
+    - name: Check PostgreSQL readiness
+      ansible.builtin.command: pg_isready
+      changed_when: false
+
+- name: Check application server
+  hosts: app
+  become: true
+  vars:
+    app_port: 3000
+  tasks:
+    - name: Check application service
+      ansible.builtin.command: systemctl is-active demo-app
+      changed_when: false
+
+    - name: Check application HTTP endpoint
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ app_port }}/"
+        method: GET
+        status_code: 200
+        return_content: true
+      register: app_response
+
+    - name: Verify application response
+      ansible.builtin.assert:
+        that:
+          - app_response.json.message == "Hello from Python!"
+        fail_msg: "Unexpected application response"
+        success_msg: "Python application is healthy"
+
+- name: Check web server
+  hosts: web
+  become: true
+  tasks:
+    - name: Check Nginx service
+      ansible.builtin.command: systemctl is-active nginx
+      changed_when: false
+
+    - name: Validate Nginx configuration
+      ansible.builtin.command: nginx -t
+      changed_when: false
+
+    - name: Check Nginx HTTP endpoint
+      ansible.builtin.uri:
+        url: http://127.0.0.1/
+        method: GET
+        status_code: 200
+
+    - name: Check application through Nginx
+      ansible.builtin.uri:
+        url: http://127.0.0.1/
+        method: GET
+        status_code: 200
+        return_content: true
+      register: web_response
+
+    - name: Verify proxied application response
+      ansible.builtin.assert:
+        that:
+          - web_response.json.message == "Hello from Python!"
+

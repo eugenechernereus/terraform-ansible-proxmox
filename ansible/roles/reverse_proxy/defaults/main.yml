@@ -1,0 +1,10 @@
+---
+nginx_package: nginx
+nginx_service: nginx
+
+nginx_site_name: myapp
+nginx_listen_port: 80
+
+app_server_group: app
+app_server_port: 3000
+
